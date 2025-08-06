@@ -14,26 +14,37 @@ Examples
  */
 
 //  imperative solution
+//object FindTheOddInt extends App {
+//  def findTheOddInt(xs: Seq[Int]): Int = {
+//    val sorted = xs.sorted.toVector
+//
+//    var i = 0
+//
+//    while (i < sorted.length) {
+//      val current = sorted(i)
+//      var count = 0
+//
+//      while (i < sorted.length && sorted(i) == current) {
+//        count += 1
+//        i += 1
+//      }
+//
+//      if (count % 2 != 0) return current
+//
+//    }
+//
+//    throw new IllegalArgumentException("No odd-count element found")
+//  }
+//
+//  println(findTheOddInt(Seq(1, 2, 1)))
+//}
+
+// Functional Version
 object FindTheOddInt extends App {
   def findTheOddInt(xs: Seq[Int]): Int = {
-    val sorted = xs.sorted.toVector
-
-    var i = 0
-
-    while (i < sorted.length) {
-      val current = sorted(i)
-      var count = 0
-
-      while (i < sorted.length && sorted(i) == current) {
-        count += 1
-        i += 1
-      }
-
-      if (count % 2 != 0) return current
-
-    }
-
-    throw new IllegalArgumentException("No odd-count element found")
+    xs.groupBy(identity)
+      .collectFirst{case (num, list) if (list.size % 2 != 0) => num }
+      .getOrElse(throw new IllegalArgumentException("No odd-count element"))
   }
 
   println(findTheOddInt(Seq(1, 2, 1)))
