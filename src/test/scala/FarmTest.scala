@@ -1,6 +1,8 @@
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.concurrent.TimeLimits
+import org.scalatest.time.SpanSugar._
 
 class FarmTest extends AnyFunSuite
   with Matchers
@@ -66,6 +68,23 @@ class FarmTest extends AnyFunSuite
     val it = Iterator(Some(true), None, Some(true))
     Farm.countSheepOpt(it) shouldBe 2
     Farm.countSheepOpt(it) shouldBe 0 // already consumed
+  }
+
+  class FarmPerfTest extends AnyFunSuite with Matchers with TimeLimits {
+
+    test("handles 100k elements in reasonable time (no materialization") {
+      val bigVec = Vector.fill(100000)(Some(true))
+      failAfter(500.millis) {
+        Farm.countSheepOpt(bigVec) shouldBe bigVec.size
+      }
+
+      val bigInter = Iterator.fill(100000)(Some(true))
+      failAfter(500.millis){
+        Farm.countSheepOpt(bigInter) shouldBe 100000
+      }
+
+    }
+
   }
 
 }

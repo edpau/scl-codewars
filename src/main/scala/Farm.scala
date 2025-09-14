@@ -56,3 +56,11 @@ object Farm extends App {
 //  println(countSheepOpt(LazyList(Some(true), None)))
 }
 
+// Bad version (with materialization)
+// Extra “really bad” version
+//object Farm extends App {
+//  def countSheepOpt(sheep: IterableOnce[Option[Boolean]]): Int = {
+////    sheep.toList.count(_.contains(true))
+//    sheep.iterator.map(_.contains(true)).toVector.count(identity)
+//  }
+//}
